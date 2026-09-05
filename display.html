@@ -30,7 +30,10 @@
   .endchip .num { font-size:32px; margin-top:3px; }
   .unskew { transform:skewX(12deg); display:flex; align-items:center; justify-content:center; width:100%; height:100%; }
   .col { flex-direction:column; line-height:1; }
-  .row2 { display:flex; align-items:center; justify-content:space-between; height:36px;
+  /* sized to its content, not stretched to the score row above: Safari and Chrome
+     disagreed on the default, so pin it. -webkit- first for older iOS Safari. */
+  .row2 { display:flex; align-items:center; gap:40px; height:36px;
+          width:-webkit-max-content; width:max-content;
           transform:skewX(-12deg); transform-origin:top left;
           background:var(--navy); color:var(--white); padding:0 22px; }
   .row2 .lft { transform:skewX(12deg); font-size:20px; letter-spacing:4px; }
