@@ -7,6 +7,11 @@ Two static pages, no build step, no server code.
 - **display.html** — runs fullscreen on the streamed device (added to Switcher as a camera source, chroma-keyed on pure green `#00FF00`). Listener only; no controls appear on stream. Tiny status dot top-right: green (invisible when keyed) = connected, red = link down.
 - **controller.html** — runs on any other device with internet (the scorer's/commentator's phone). Big-button controls for scores, sets, end, set number, match setup, and the match timer.
 
+## Updating the board
+Scores, sets, end, set number and the tiebreak are staged on the controller: tap them as much as you like and the display does not move. Edited values show amber and **UPDATE BOARD** turns green; pressing it sends everything in one message so the display changes all of them in the same frame. The panel at the top always mirrors what is currently on air, not what you are about to send.
+
+Everything else is immediate, because waiting would be wrong: the timer, ON AIR, TIMER SHOWN, NEW MATCH and everything under Match Setup all take effect as soon as you touch them, and they never carry your staged edits with them.
+
 ## Sets play
 Tick **Sets play** in Match Setup to add the per-side set counters and the SET stepper. During a deciding tiebreak, hit the **TIEBREAK** toggle: the display shows `TB` instead of `SET n`, and the SET stepper hides until you toggle it back off.
 
