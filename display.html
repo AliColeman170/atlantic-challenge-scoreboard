@@ -25,6 +25,7 @@
   .sets.hidden { display:none; }
   .score { flex:0 0 104px; background:var(--navy); color:var(--white); font-size:54px; }
   .endchip { flex:0 0 120px; background:var(--ice); color:var(--navy); }
+  .endchip.bare { flex:0 0 40px; }
   .endchip .lbl { font-size:22px; letter-spacing:2px; }
   .endchip .num { font-size:32px; margin-top:3px; }
   .unskew { transform:skewX(12deg); display:flex; align-items:center; justify-content:center; width:100%; height:100%; }
@@ -49,7 +50,7 @@
     <div class="cell abbr"><div class="unskew" id="hAbbr">IRE</div></div>
     <div class="cell sets" id="hSetsCell"><div class="unskew" id="hSets">0</div></div>
     <div class="cell score"><div class="unskew" id="hScore">0</div></div>
-    <div class="cell endchip"><div class="unskew col">
+    <div class="cell endchip" id="endChip"><div class="unskew col">
       <div class="lbl" id="endLbl">END</div><div class="num" id="endNum">1</div></div></div>
     <div class="cell score"><div class="unskew" id="aScore">0</div></div>
     <div class="cell sets" id="aSetsCell"><div class="unskew" id="aSets">0</div></div>
@@ -110,11 +111,16 @@ function render(){
   $("hSets").textContent=S.hsets; $("aSets").textContent=S.asets;
   $("hSetsCell").classList.toggle("hidden", !S.setsMode);
   $("aSetsCell").classList.toggle("hidden", !S.setsMode);
+  const showEnd = S.end > 0;   // END 0 hides the end readout (e.g. a one-end tiebreak)
   if (S.setsMode){ $("endLbl").textContent = S.tb ? "TB" : "SET "+S.setNum;
-    $("endLbl").style.fontSize = S.tb ? "30px" : "22px";
+    // with the end line gone the label carries the chip alone, so it sizes up
+    $("endLbl").style.fontSize = showEnd ? (S.tb ? "30px" : "22px") : (S.tb ? "40px" : "30px");
     $("endNum").textContent="END "+S.end; $("endNum").style.fontSize="24px"; }
   else { $("endLbl").textContent="END"; $("endLbl").style.fontSize="22px";
     $("endNum").textContent=S.end; $("endNum").style.fontSize="32px"; }
+  $("endNum").style.display = showEnd ? "" : "none";
+  $("endLbl").style.display = (!S.setsMode && !showEnd) ? "none" : "";
+  $("endChip").classList.toggle("bare", !S.setsMode && !showEnd);
   $("infoLine").textContent=S.info;
   tickClock(); fit();
   try{ localStorage.setItem("aicSBD", JSON.stringify(S)); }catch(e){}

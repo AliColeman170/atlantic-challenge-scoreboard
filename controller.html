@@ -29,6 +29,7 @@
             background:#0a2f5c; border-radius:14px; padding:10px 14px; margin-top:10px; }
   .rowctl .lbl { font-size:22px; letter-spacing:2px; color:var(--ice); }
   .rowctl .val { font-size:34px; min-width:56px; text-align:center; }
+  .rowctl .lbl small { display:block; font-size:11px; letter-spacing:1px; color:var(--mid); margin-top:2px; }
   .sm { width:64px; height:54px; font-size:28px; }
   .timerbox { background:#0a2f5c; border-radius:14px; padding:12px 14px; margin-top:12px; }
   .timerbox .t { font-size:46px; text-align:center; font-variant-numeric:tabular-nums; letter-spacing:2px; }
@@ -60,7 +61,7 @@
     <button class="plus" data-k="as" data-d="1">+1</button></div></div>
 </div>
 
-<div class="rowctl"><span class="lbl">END</span><span class="val" id="endVal">1</span>
+<div class="rowctl"><span class="lbl">END<small>0 = HIDDEN</small></span><span class="val" id="endVal">1</span>
   <span class="btnrow"><button class="minus sm" data-k="end" data-d="-1">&minus;</button>
   <button class="plus sm" data-k="end" data-d="1">+</button></span></div>
 
@@ -143,7 +144,7 @@ function render(){
   $("hSetName").textContent=S.h; $("aSetName").textContent=S.a;
   $("hVal").textContent=S.hs; $("aVal").textContent=S.as;
   $("hSetsVal").textContent=S.hsets; $("aSetsVal").textContent=S.asets;
-  $("endVal").textContent=S.end; $("setVal").textContent=S.setNum;
+  $("endVal").textContent = S.end>0 ? S.end : "OFF"; $("setVal").textContent=S.setNum;
   $("setRow").style.display = (S.setsMode && !S.tb) ? "" : "none";
   $("tbRow").style.display = S.setsMode ? "" : "none";
   $("setsCells").style.display = S.setsMode ? "" : "none";
@@ -151,7 +152,8 @@ function render(){
   $("tbToggle").classList.toggle("on", S.tb);
   $("mirror").textContent = S.h+" "+S.hs+" \u2013 "+S.as+" "+S.a +
       (S.setsMode ? "   (sets "+S.hsets+"\u2013"+S.asets+")" : "");
-  $("mirror2").textContent = (S.setsMode ? (S.tb ? "TB" : "SET "+S.setNum)+" \u00B7 " : "") + "END "+S.end+" \u00B7 "+S.info;
+  $("mirror2").textContent = (S.setsMode ? (S.tb ? "TB" : "SET "+S.setNum)+" \u00B7 " : "")
+      + (S.end>0 ? "END "+S.end+" \u00B7 " : "") + S.info;
 }
 function tick(){
   const el=$("tShow"); const e=elapsed(); let show,low=false,zero=false;
@@ -166,7 +168,7 @@ setInterval(tick, 250);
 document.querySelectorAll("button[data-k]").forEach(b=>{
   b.addEventListener("click", ()=>{
     const k=b.dataset.k, d=parseInt(b.dataset.d);
-    const min = (k==="end"||k==="setNum") ? 1 : 0;
+    const min = (k==="setNum") ? 1 : 0;
     S[k]=Math.max(min, S[k]+d);
     render(); push();
   });

@@ -6,6 +6,11 @@ Two static pages, no build step, no server code.
 ## Files
 - **display.html** — runs fullscreen on the streamed device (added to Switcher as a camera source, chroma-keyed on pure green `#00FF00`). Listener only; no controls appear on stream. Tiny status dot top-right: green (invisible when keyed) = connected, red = link down.
 - **controller.html** — runs on any other device with internet (the scorer's/commentator's phone). Big-button controls for scores, sets, end, set number, match setup, and the match timer.
+
+## Sets play
+Tick **Sets play** in Match Setup to add the per-side set counters and the SET stepper. During a deciding tiebreak, hit the **TIEBREAK** toggle: the display shows `TB` instead of `SET n`, and the SET stepper hides until you toggle it back off.
+
+Take **END** down to `0` (the controller shows `OFF`) to hide the end readout entirely — for a one-end tiebreak, where counting ends says nothing. It works outside sets play too; there the chip collapses to a plain divider between the scores.
 - **index.html** — landing page linking both.
 
 ## Hosting (GitHub Pages)
