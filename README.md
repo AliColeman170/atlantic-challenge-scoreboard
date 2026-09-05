@@ -8,7 +8,7 @@ Two static pages, no build step, no server code.
 - **controller.html** — runs on any other device with internet (the scorer's/commentator's phone). Big-button controls for scores, sets, end, set number, match setup, and the match timer.
 
 ## Updating the board
-Scores, sets, end, set number and the tiebreak are staged on the controller: tap them as much as you like and the display does not move. Edited values show amber and **UPDATE BOARD** turns green; pressing it sends everything in one message so the display changes all of them in the same frame. The panel at the top always mirrors what is currently on air, not what you are about to send.
+Scores, sets, end, set number and the tiebreak are staged on the controller: tap them as much as you like and the display does not move. Edited values show amber and **UPDATE BOARD** turns green; pressing it sends everything in one message so the display changes all of them in the same frame. **REVERT** appears alongside it while anything is staged and throws the edits away, pulling the on-air values back into the controls. The panel at the top always mirrors what is currently on air, not what you are about to send.
 
 Everything else is immediate, because waiting would be wrong: the timer, ON AIR, TIMER SHOWN, NEW MATCH and everything under Match Setup all take effect as soon as you touch them, and they never carry your staged edits with them.
 
