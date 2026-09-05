@@ -157,11 +157,20 @@ function onRemote(msg){
   render();
 }
 function fit(){
-  const w=$("strap").offsetWidth || 724;
+  const strap=$("strap"), row=document.querySelector(".row1");
+  // WebKit (so every browser on iPad) mis-resolves width:max-content on the
+  // absolutely positioned strap, sizing it from the narrower info bar. The
+  // white background then stops short and the away side spills onto the key
+  // colour, and the scale is computed from a strap narrower than the one
+  // drawn. scrollWidth reports the true content width in both engines, so
+  // pin an explicit width from it before measuring anything.
+  row.style.width=""; strap.style.width="";
+  const w = row.scrollWidth || strap.offsetWidth || 724;
+  row.style.width = w+"px"; strap.style.width = w+"px";
   const pct=Math.min(90, Math.max(20, S.sizePct||55));
-  $("strap").style.transform = "scale(" + (window.innerWidth*(pct/100))/w + ")";
+  strap.style.transform = "scale(" + (window.innerWidth*(pct/100))/w + ")";
   const top=Math.min(85, Math.max(0, S.topPct==null ? 10 : S.topPct));
-  $("strap").style.top = top + "%";
+  strap.style.top = top + "%";
 }
 // The strap's width shifts when the embedded face replaces the fallback, so the
 // first fit() would otherwise be scaled from the wrong metrics and come out
