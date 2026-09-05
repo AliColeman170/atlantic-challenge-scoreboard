@@ -43,6 +43,8 @@
   select, input { width:100%; font-size:20px; padding:9px; border-radius:8px; border:none; font-family:inherit; }
   .chk { margin-top:12px; font-size:18px; display:flex; align-items:center; gap:10px; }
   .chk input { width:24px; height:24px; }
+  #tbToggle { background:#2c5f8a; width:132px; height:54px; font-size:20px; letter-spacing:2px; }
+  #tbToggle.on { background:var(--amber); color:#04203f; }
   #newmatch { width:100%; margin-top:14px; height:56px; background:var(--red); font-size:20px; letter-spacing:2px; }
 </style></head>
 <body>
@@ -65,6 +67,9 @@
 <div class="rowctl" id="setRow" style="display:none"><span class="lbl">SET</span><span class="val" id="setVal">1</span>
   <span class="btnrow"><button class="minus sm" data-k="setNum" data-d="-1">&minus;</button>
   <button class="plus sm" data-k="setNum" data-d="1">+</button></span></div>
+
+<div class="rowctl" id="tbRow" style="display:none"><span class="lbl">TIEBREAK</span>
+  <span class="btnrow"><button id="tbToggle">OFF</button></span></div>
 
 <div class="grid2 stack" id="setsCells" style="display:none">
   <div class="side"><h2>SETS <span id="hSetName">IRE</span></h2><div class="bigval" id="hSetsVal">0</div>
@@ -116,7 +121,7 @@ safe-buffer/index.js:
 <script>
 const NATIONS = ["IRE","SCO","USA","CAN"];
 const $ = id => document.getElementById(id);
-let S = { h:"IRE", a:"SCO", hs:0, as:0, hsets:0, asets:0, end:1, setNum:1, setsMode:false,
+let S = { h:"IRE", a:"SCO", hs:0, as:0, hsets:0, asets:0, end:1, setNum:1, setsMode:false, tb:false,
           info:"MEN'S PAIRS \u00B7 RINK 3", mins:120, running:false, startedAt:0, elapsedBase:0 };
 try { const sv=localStorage.getItem("aicSBC"); if(sv) S=Object.assign(S, JSON.parse(sv)); } catch(e){}
 
@@ -129,7 +134,7 @@ function fmt(t){ t=Math.max(0,Math.round(t));
 
 function push(){
   publishState({ h:S.h, a:S.a, hs:S.hs, as:S.as, hsets:S.hsets, asets:S.asets,
-    end:S.end, setNum:S.setNum, setsMode:S.setsMode, info:S.info, mins:S.mins,
+    end:S.end, setNum:S.setNum, setsMode:S.setsMode, tb:S.tb, info:S.info, mins:S.mins,
     running:S.running, timerElapsed:elapsed() });
   try{ localStorage.setItem("aicSBC", JSON.stringify(S)); }catch(e){}
 }
@@ -139,11 +144,14 @@ function render(){
   $("hVal").textContent=S.hs; $("aVal").textContent=S.as;
   $("hSetsVal").textContent=S.hsets; $("aSetsVal").textContent=S.asets;
   $("endVal").textContent=S.end; $("setVal").textContent=S.setNum;
-  $("setRow").style.display = S.setsMode ? "" : "none";
+  $("setRow").style.display = (S.setsMode && !S.tb) ? "" : "none";
+  $("tbRow").style.display = S.setsMode ? "" : "none";
   $("setsCells").style.display = S.setsMode ? "" : "none";
+  $("tbToggle").textContent = S.tb ? "ON" : "OFF";
+  $("tbToggle").classList.toggle("on", S.tb);
   $("mirror").textContent = S.h+" "+S.hs+" \u2013 "+S.as+" "+S.a +
       (S.setsMode ? "   (sets "+S.hsets+"\u2013"+S.asets+")" : "");
-  $("mirror2").textContent = (S.setsMode ? "SET "+S.setNum+" \u00B7 " : "") + "END "+S.end+" \u00B7 "+S.info;
+  $("mirror2").textContent = (S.setsMode ? (S.tb ? "TB" : "SET "+S.setNum)+" \u00B7 " : "") + "END "+S.end+" \u00B7 "+S.info;
 }
 function tick(){
   const el=$("tShow"); const e=elapsed(); let show,low=false,zero=false;
@@ -178,8 +186,9 @@ $("sHome").onchange=e=>{ S.h=e.target.value; render(); push(); };
 $("sAway").onchange=e=>{ S.a=e.target.value; render(); push(); };
 $("sInfo").onchange=e=>{ S.info=e.target.value; render(); push(); };
 $("sMins").onchange=e=>{ S.mins=Math.max(0,parseInt(e.target.value||0)); tick(); push(); };
-$("sSetsMode").onchange=e=>{ S.setsMode=e.target.checked; render(); push(); };
-$("newmatch").onclick=()=>{ S.hs=0;S.as=0;S.hsets=0;S.asets=0;S.end=1;S.setNum=1;
+$("sSetsMode").onchange=e=>{ S.setsMode=e.target.checked; if(!S.setsMode) S.tb=false; render(); push(); };
+$("tbToggle").onclick=()=>{ S.tb=!S.tb; render(); push(); };
+$("newmatch").onclick=()=>{ S.hs=0;S.as=0;S.hsets=0;S.asets=0;S.end=1;S.setNum=1;S.tb=false;
   S.running=false;S.elapsedBase=0; render(); tick(); push(); };
 
 
