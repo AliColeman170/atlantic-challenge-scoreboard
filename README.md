@@ -12,6 +12,8 @@ Scores, sets, end, set number and the tiebreak are staged on the controller: tap
 
 Everything else is immediate, because waiting would be wrong: the timer, ON AIR, TIMER SHOWN, NEW MATCH and everything under Match Setup all take effect as soon as you touch them, and they never carry your staged edits with them.
 
+**SCORES 0 &ndash; 0** and **END 1** are quick resets for a set change; they stage like anything else, so award the set, tap both, bump the set number, and one UPDATE puts the whole change on the board at once.
+
 ## Sets play
 Tick **Sets play** in Match Setup to add the per-side set counters and the SET stepper. During a deciding tiebreak, hit the **TIEBREAK** toggle: the display shows `TB` instead of `SET n`, and the SET stepper hides until you toggle it back off.
 

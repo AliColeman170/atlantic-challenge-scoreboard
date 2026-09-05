@@ -27,6 +27,7 @@
   /* a value edited but not yet sent to the display */
   .bigval.pendval, .rowctl .val.pendval { color:var(--amber); }
   #tbToggle.pendbtn { box-shadow:0 0 0 3px var(--amber); }
+  #resets button { flex:1; height:52px; font-size:18px; letter-spacing:2px; background:#2c5f8a; }
   header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
   header h1 { font-size:22px; letter-spacing:2px; }
   #status { font-size:14px; letter-spacing:1px; padding:6px 12px; border-radius:20px; background:var(--red); }
@@ -83,6 +84,11 @@
   <div class="side"><h2 id="aName">SCO</h2><div class="bigval" id="aVal">0</div>
     <div class="btnrow"><button class="minus" data-k="as" data-d="-1">&minus;</button>
     <button class="plus" data-k="as" data-d="1">+1</button></div></div>
+</div>
+
+<div class="btnrow stack" id="resets">
+  <button id="rzScores">SCORES 0 &ndash; 0</button>
+  <button id="rzEnd">END 1</button>
 </div>
 
 <div class="rowctl"><span class="lbl">END<small>0 = HIDDEN</small></span><span class="val" id="endVal">1</span>
@@ -257,6 +263,8 @@ $("update").onclick=()=>{ snapshotLive(); render(); push(); };
 // discard the staged edits by pulling the live values back; nothing is
 // published, since the display never saw them
 $("revert").onclick=()=>{ STAGED.forEach(k=>S[k]=LIVE[k]); render(); };
+$("rzScores").onclick=()=>{ S.hs=0; S.as=0; render(); };
+$("rzEnd").onclick=()=>{ S.end=1; render(); };
 $("timervis").onclick=()=>{ S.showTimer=!S.showTimer; render(); push(); };
 $("onair").onclick=()=>{ S.onAir=!S.onAir; render(); push(); };
 $("newmatch").onclick=()=>{ S.hs=0;S.as=0;S.hsets=0;S.asets=0;S.end=1;S.setNum=1;S.tb=false;
