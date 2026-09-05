@@ -19,7 +19,7 @@
   .cell { display:flex; align-items:center; justify-content:center; }
   .flagcell { flex:0 0 118px; }
   .flagcell img { width:72px; height:48px; outline:2px solid var(--navy); transform:skewX(12deg); }
-  .abbr { flex:0 0 112px; min-width:0; color:var(--navy); font-size:44px; letter-spacing:2px; }
+  .abbr { flex:0 0 auto; min-width:112px; padding:0 8px; color:var(--navy); font-size:44px; letter-spacing:2px; }
   .sets { flex:0 0 52px; background:var(--white); color:var(--navy); font-size:34px;
           border-top:6px solid var(--ice); border-bottom:6px solid var(--ice); }
   .sets.hidden { display:none; }
@@ -122,8 +122,17 @@ function render(){
   $("endLbl").style.display = (!S.setsMode && !showEnd) ? "none" : "";
   $("endChip").classList.toggle("bare", !S.setsMode && !showEnd);
   $("infoLine").textContent=S.info;
+  sizeAbbrs();
   tickClock(); fit();
   try{ localStorage.setItem("aicSBD", JSON.stringify(S)); }catch(e){}
+}
+// Match both abbreviation cells to the wider of the two. offsetWidth is the
+// untransformed layout width, so the skew and page scale don't affect it.
+function sizeAbbrs(){
+  const cells=[$("hAbbr").parentElement, $("aAbbr").parentElement];
+  cells.forEach(c=>c.style.width="");
+  const w=Math.max(cells[0].offsetWidth, cells[1].offsetWidth);
+  cells.forEach(c=>c.style.width=w+"px");
 }
 function onRemote(msg){
   // msg carries scoreboard fields + timer as {mins, running, timerElapsed}
