@@ -166,6 +166,9 @@ let S = { h:"IRE", a:"SCO", hs:0, as:0, hsets:0, asets:0, end:1, setNum:1, setsM
 // UPDATE is pressed, so end, sets and scores all change in the same frame
 // instead of rippling one at a time.
 const STAGED = ["hs","as","hsets","asets","end","setNum","tb"];
+const SHARED = ["h","a","setsMode","showTimer","sizePct","topPct","onAir","info","mins"];
+// tags our own messages so the subscription can ignore the echo
+const MYID = Math.random().toString(36).slice(2);
 let LIVE = {};
 function snapshotLive(){ STAGED.forEach(k=>LIVE[k]=S[k]); }
 function pending(){ return STAGED.filter(k=>S[k]!==LIVE[k]); }
@@ -185,7 +188,7 @@ function fmt(t){ t=Math.max(0,Math.round(t));
 function push(){
   const out={ h:S.h, a:S.a, setsMode:S.setsMode, showTimer:S.showTimer,
     sizePct:S.sizePct, topPct:S.topPct, onAir:S.onAir, info:S.info, mins:S.mins,
-    running:S.running, timerElapsed:elapsed() };
+    running:S.running, timerElapsed:elapsed(), src:MYID };
   STAGED.forEach(k=>out[k]=LIVE[k]);
   publishState(out);
   try{ localStorage.setItem("aicSBC", JSON.stringify({S:S, LIVE:LIVE})); }catch(e){}
@@ -245,9 +248,27 @@ $("treset").onclick=()=>{ S.running=false; S.elapsedBase=0; tick(); push(); };
 
 const opts = NATIONS.map(n=>'<option value="'+n+'">'+n+'</option>').join("");
 $("sHome").innerHTML=opts; $("sAway").innerHTML=opts;
-$("sHome").value=S.h; $("sAway").value=S.a;
-$("sInfo").value=S.info; $("sMins").value=S.mins; $("sSetsMode").checked=S.setsMode;
-$("sSize").value=S.sizePct; $("sTop").value=S.topPct;
+function syncSetupFields(){
+  $("sHome").value=S.h; $("sAway").value=S.a;
+  $("sInfo").value=S.info; $("sMins").value=S.mins; $("sSetsMode").checked=S.setsMode;
+  $("sSize").value=S.sizePct; $("sTop").value=S.topPct;
+}
+syncSetupFields();
+
+// A second controller's update. Fields this scorer has staged are left alone,
+// so an edit in progress is never overwritten; everything else follows the
+// board. Retained state means a controller opened mid-match syncs at once.
+function onRemoteC(msg){
+  if (msg.src === MYID) return;
+  const pend = pending();
+  SHARED.forEach(k=>{ if (msg[k]!==undefined) S[k]=msg[k]; });
+  STAGED.forEach(k=>{ if (msg[k]!==undefined) LIVE[k]=msg[k]; });
+  STAGED.forEach(k=>{ if (!pend.includes(k)) S[k]=LIVE[k]; });
+  if (msg.timerElapsed!==undefined){
+    S.elapsedBase=msg.timerElapsed; S.startedAt=Date.now(); S.running=!!msg.running;
+  }
+  syncSetupFields(); render(); tick();
+}
 $("sHome").onchange=e=>{ S.h=e.target.value; render(); push(); };
 $("sAway").onchange=e=>{ S.a=e.target.value; render(); push(); };
 $("sInfo").onchange=e=>{ S.info=e.target.value; render(); push(); };
@@ -290,7 +311,7 @@ function publishState(obj){
   if(client && connected){ client.publish(TOPIC, JSON.stringify(obj), {retain:true, qos:0}); }
 }
 
-connect(null);
+connect(onRemoteC);
 render(); tick();
 setInterval(()=>{ if(S.running) push(); }, 20000); // periodic timer re-sync
 </script>
