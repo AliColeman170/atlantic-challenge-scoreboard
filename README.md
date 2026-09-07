@@ -20,6 +20,8 @@ Everything else is immediate, because waiting would be wrong: the timer, ON AIR,
 ## Sets play
 Tick **Sets play** in Match Setup to add the per-side set counters and the SET stepper. During a deciding tiebreak, hit the **TIEBREAK** toggle: the display shows `TB` instead of `SET n`, and the SET stepper hides until you toggle it back off.
 
+**FINISHED** replaces the end readout with `F`. It shows whatever the end count is, so a game that ends on a hidden-end tiebreak still reads F.
+
 Take **END** down to `0` (the controller shows `OFF`) to hide the end readout entirely — for a one-end tiebreak, where counting ends says nothing. It works outside sets play too; there the chip collapses to a plain divider between the scores.
 - **index.html** — landing page linking both.
 
