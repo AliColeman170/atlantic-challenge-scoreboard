@@ -133,25 +133,26 @@ function render(){
   $("hSetsCell").classList.toggle("hidden", !S.setsMode);
   $("aSetsCell").classList.toggle("hidden", !S.setsMode);
   // END 0 hides the end readout (e.g. a one-end tiebreak); a finished game
-  // replaces it with F, which shows whatever the end count is
-  const fin = S.fin === true, showEnd = fin || S.end > 0;
+  // takes the whole chip and reads F alone, in either mode
+  const fin = S.fin === true, showEnd = S.end > 0;
   const L=$("endLbl"), N=$("endNum");
-  if (S.setsMode){
+  if (fin){
+    L.textContent="F"; L.style.fontSize="36px"; L.style.display="";
+    N.style.display="none";
+  } else if (S.setsMode){
     L.textContent = S.tb ? "TB" : "SET "+S.setNum;
     // with the end line gone the label carries the chip alone, so it sizes up
     L.style.fontSize = showEnd ? (S.tb ? "28px" : "20px") : (S.tb ? "36px" : "28px");
-    N.textContent = fin ? "F" : "END "+S.end;
-    N.style.fontSize = fin ? "26px" : "22px";
+    N.textContent = "END "+S.end; N.style.fontSize="22px";
     N.style.display = showEnd ? "" : "none";
     L.style.display = "";
   } else {
-    L.textContent = fin ? "F" : "END";
-    L.style.fontSize = fin ? "36px" : "20px";
-    N.textContent = S.end; N.style.fontSize = "28px";
-    N.style.display = (fin || !showEnd) ? "none" : "";
+    L.textContent="END"; L.style.fontSize="20px";
+    N.textContent=S.end; N.style.fontSize="28px";
+    N.style.display = showEnd ? "" : "none";
     L.style.display = showEnd ? "" : "none";
   }
-  $("endChip").classList.toggle("bare", !S.setsMode && !showEnd);
+  $("endChip").classList.toggle("bare", !fin && !S.setsMode && !showEnd);
   $("infoLine").textContent=S.info;
   $("clockWrap").style.display = S.showTimer ? "" : "none";
   $("board").classList.toggle("off", S.onAir===false);

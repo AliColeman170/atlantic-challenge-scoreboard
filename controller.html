@@ -215,8 +215,9 @@ function render(){
   $("onair").classList.toggle("off", !S.onAir);
   $("mirror").textContent = S.h+" "+LIVE.hs+" \u2013 "+LIVE.as+" "+S.a +
       (S.setsMode ? "   (sets "+LIVE.hsets+"\u2013"+LIVE.asets+")" : "");
-  $("mirror2").textContent = (S.setsMode ? (LIVE.tb ? "TB" : "SET "+LIVE.setNum)+" \u00B7 " : "")
-      + (LIVE.fin ? "F \u00B7 " : (LIVE.end>0 ? "END "+LIVE.end+" \u00B7 " : "")) + S.info;
+  $("mirror2").textContent = (LIVE.fin ? "F \u00B7 "
+      : (S.setsMode ? (LIVE.tb ? "TB" : "SET "+LIVE.setNum)+" \u00B7 " : "")
+        + (LIVE.end>0 ? "END "+LIVE.end+" \u00B7 " : "")) + S.info;
   const pend=pending();
   const mark=(id,k)=>$(id).classList.toggle("pendval", pend.includes(k));
   mark("hVal","hs"); mark("aVal","as"); mark("hSetsVal","hsets"); mark("aSetsVal","asets");
