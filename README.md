@@ -7,6 +7,9 @@ Two static pages, no build step, no server code.
 - **display.html** — runs fullscreen on the streamed device (added to Switcher as a camera source, chroma-keyed on pure green `#00FF00`). Listener only; no controls appear on stream. Tiny status dot top-right: green (invisible when keyed) = connected, red = link down.
 - **controller.html** — runs on any other device with internet (the scorer's/commentator's phone). Big-button controls for scores, sets, end, set number, match setup, and the match timer.
 
+## Mixed pairs
+`CAN/IRE` is in the nation list for an exhibition mixed pair, with a half-and-half flag. Its label is too long for the usual type size, so the abbreviation shrinks to fit rather than stretching the strap; both sides take the same size, so the ends stay matched. Another pairing is a few lines to add - the composite is built from the two existing flag images.
+
 ## Two scorers
 The controller both publishes and subscribes, so more than one can be open at once. A field you are part-way through staging is never overwritten by the other scorer: their update moves everything you have not touched, and your amber edits stay put until you send them. Because state is retained, a controller opened mid-match picks up the current board straight away.
 
