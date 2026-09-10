@@ -8,7 +8,7 @@ Two static pages, no build step, no server code.
 - **controller.html** — runs on any other device with internet (the scorer's/commentator's phone). Big-button controls for scores, sets, end, set number, match setup, and the match timer.
 
 ## Mixed pairs
-`CAN/IRE` is in the nation list for an exhibition mixed pair, with a half-and-half flag. Its label is too long for the usual type size, so the abbreviation shrinks to fit rather than stretching the strap; both sides take the same size, so the ends stay matched. Another pairing is a few lines to add - the composite is built from the two existing flag images.
+`CAN/IRE` is in the nation list for an exhibition mixed pair, with a half-and-half flag, each side keeping its own half of the flag at full scale. Its label is too long for the usual type size, so the abbreviation shrinks to fit rather than stretching the strap; both sides take the same size, so the ends stay matched. Another pairing is a few lines to add - the composite is built from the two existing flag images.
 
 ## Two scorers
 The controller both publishes and subscribes, so more than one can be open at once. A field you are part-way through staging is never overwritten by the other scorer: their update moves everything you have not touched, and your amber edits stay put until you send them. Because state is retained, a controller opened mid-match picks up the current board straight away.
