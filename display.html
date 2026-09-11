@@ -131,8 +131,15 @@ function render(){
   // a finished sets game shows the sets result and drops the shots score from
   // the last set, the sets taking the main blocks and the small counters going
   const setsFinal = S.setsMode && S.fin === true;
-  $("hScore").textContent = setsFinal ? fmtSets(S.hsets) : S.hs;
-  $("aScore").textContent = setsFinal ? fmtSets(S.asets) : S.as;
+  const hTxt = setsFinal ? fmtSets(S.hsets) : String(S.hs);
+  const aTxt = setsFinal ? fmtSets(S.asets) : String(S.as);
+  $("hScore").textContent = hTxt;
+  $("aScore").textContent = aTxt;
+  // a half is two glyphs wide and sits heavy against a single digit, so ease
+  // the size off; both sides take the same one so the pair stays matched
+  const scoreFs = (hTxt+aTxt).indexOf("\u00BD")>=0 ? "40px" : "";
+  $("hScore").style.fontSize = scoreFs;
+  $("aScore").style.fontSize = scoreFs;
   $("hSets").textContent=fmtSets(S.hsets); $("aSets").textContent=fmtSets(S.asets);
   $("hSetsCell").classList.toggle("hidden", !S.setsMode || setsFinal);
   $("aSetsCell").classList.toggle("hidden", !S.setsMode || setsFinal);
