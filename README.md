@@ -23,7 +23,7 @@ Everything else is immediate, because waiting would be wrong: the timer, ON AIR,
 ## Sets play
 Tick **Sets play** in Match Setup to add the per-side set counters and the SET stepper. During a deciding tiebreak, hit the **TIEBREAK** toggle: the display shows `TB` instead of `SET n`, and the SET stepper hides until you toggle it back off.
 
-**FINISHED** gives the whole chip over to a single `F`, in sets play as well as plain, dropping the set and end lines. The per-side set counters stay, since they carry the result.
+**FINISHED** gives the whole chip over to a single `F`, in sets play as well as plain, dropping the set and end lines. In sets play it also drops the shots score from the last set: the sets result moves into the main score blocks and the small counters go, so the board carries the result of the match and nothing else.
 
 A drawn set is half each: **DRAWN SET** adds &frac12; to both sides in one tap, and the counters read `½`, `1½` and so on. The per-side buttons are `+1` to award a set and `&minus;½` to correct in halves.
 

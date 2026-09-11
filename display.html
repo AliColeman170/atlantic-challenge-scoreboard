@@ -128,10 +128,14 @@ function render(){
   if (prevHs!==null && S.hs!==prevHs) pulse($("hScore").parentElement);
   if (prevAs!==null && S.as!==prevAs) pulse($("aScore").parentElement);
   prevHs=S.hs; prevAs=S.as;
-  $("hScore").textContent=S.hs; $("aScore").textContent=S.as;
+  // a finished sets game shows the sets result and drops the shots score from
+  // the last set, the sets taking the main blocks and the small counters going
+  const setsFinal = S.setsMode && S.fin === true;
+  $("hScore").textContent = setsFinal ? fmtSets(S.hsets) : S.hs;
+  $("aScore").textContent = setsFinal ? fmtSets(S.asets) : S.as;
   $("hSets").textContent=fmtSets(S.hsets); $("aSets").textContent=fmtSets(S.asets);
-  $("hSetsCell").classList.toggle("hidden", !S.setsMode);
-  $("aSetsCell").classList.toggle("hidden", !S.setsMode);
+  $("hSetsCell").classList.toggle("hidden", !S.setsMode || setsFinal);
+  $("aSetsCell").classList.toggle("hidden", !S.setsMode || setsFinal);
   // END 0 hides the end readout (e.g. a one-end tiebreak); a finished game
   // takes the whole chip and reads F alone, in either mode
   const fin = S.fin === true, showEnd = S.end > 0;

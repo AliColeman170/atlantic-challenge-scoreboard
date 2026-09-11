@@ -224,8 +224,11 @@ function render(){
   $("timervis").classList.toggle("off", !S.showTimer);
   $("onair").textContent = S.onAir ? "ON AIR" : "OFF AIR";
   $("onair").classList.toggle("off", !S.onAir);
-  $("mirror").textContent = S.h+" "+LIVE.hs+" \u2013 "+LIVE.as+" "+S.a +
-      (S.setsMode ? "   (sets "+fmtSets(LIVE.hsets)+"\u2013"+fmtSets(LIVE.asets)+")" : "");
+  const setsFinal = S.setsMode && LIVE.fin === true;
+  $("mirror").textContent = S.h+" "
+      + (setsFinal ? fmtSets(LIVE.hsets) : LIVE.hs) + " \u2013 "
+      + (setsFinal ? fmtSets(LIVE.asets) : LIVE.as) + " " + S.a
+      + (S.setsMode && !setsFinal ? "   (sets "+fmtSets(LIVE.hsets)+"\u2013"+fmtSets(LIVE.asets)+")" : "");
   $("mirror2").textContent = (LIVE.fin ? "F \u00B7 "
       : (S.setsMode ? (LIVE.tb ? "TB" : "SET "+LIVE.setNum)+" \u00B7 " : "")
         + (LIVE.end>0 ? "END "+LIVE.end+" \u00B7 " : "")) + S.info;
