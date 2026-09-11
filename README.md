@@ -25,6 +25,8 @@ Tick **Sets play** in Match Setup to add the per-side set counters and the SET s
 
 **FINISHED** gives the whole chip over to a single `F`, in sets play as well as plain, dropping the set and end lines. The per-side set counters stay, since they carry the result.
 
+A drawn set is half each: **DRAWN SET** adds &frac12; to both sides in one tap, and the counters read `½`, `1½` and so on. The per-side buttons are `+1` to award a set and `&minus;½` to correct in halves.
+
 Take **END** down to `0` (the controller shows `OFF`) to hide the end readout entirely — for a one-end tiebreak, where counting ends says nothing. It works outside sets play too; there the chip collapses to a plain divider between the scores.
 - **index.html** — landing page linking both.
 

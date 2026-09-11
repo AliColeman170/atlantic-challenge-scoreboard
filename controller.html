@@ -29,6 +29,7 @@
   #tbToggle.pendbtn, #finToggle.pendbtn { box-shadow:0 0 0 3px var(--amber); }
   #finToggle { background:#2c5f8a; width:132px; height:54px; font-size:20px; letter-spacing:2px; }
   #finToggle.on { background:var(--amber); color:#04203f; }
+  #drawnSet { flex:1; height:52px; font-size:18px; letter-spacing:2px; background:#2c5f8a; }
   #resets button { flex:1; height:52px; font-size:18px; letter-spacing:2px; background:#2c5f8a; }
   header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
   header h1 { font-size:22px; letter-spacing:2px; }
@@ -109,11 +110,15 @@
 
 <div class="grid2 stack" id="setsCells" style="display:none">
   <div class="side"><h2>SETS <span id="hSetName">IRE</span></h2><div class="bigval" id="hSetsVal">0</div>
-    <div class="btnrow"><button class="minus" data-k="hsets" data-d="-1">&minus;</button>
+    <div class="btnrow"><button class="minus" data-k="hsets" data-d="-0.5">&minus;&frac12;</button>
     <button class="plus" data-k="hsets" data-d="1">+1</button></div></div>
   <div class="side"><h2>SETS <span id="aSetName">SCO</span></h2><div class="bigval" id="aSetsVal">0</div>
-    <div class="btnrow"><button class="minus" data-k="asets" data-d="-1">&minus;</button>
+    <div class="btnrow"><button class="minus" data-k="asets" data-d="-0.5">&minus;&frac12;</button>
     <button class="plus" data-k="asets" data-d="1">+1</button></div></div>
+</div>
+
+<div class="btnrow stack" id="drawnRow" style="display:none">
+  <button id="drawnSet">DRAWN SET &mdash; &frac12; EACH</button>
 </div>
 
 <div class="timerbox">
@@ -183,6 +188,11 @@ try { const sv=JSON.parse(localStorage.getItem("aicSBC")||"null");
 } catch(e){}
 if (!STAGED.every(k=>k in LIVE)) snapshotLive();
 
+// a drawn set is half each: 0.5 -> "1/2", 1.5 -> "1 1/2"
+function fmtSets(n){
+  const w=Math.floor(n), h=(n-w)>=0.5;
+  return (w||!h ? String(w) : "") + (h ? "\u00BD" : "");
+}
 function setStatus(ok){ $("status").textContent = ok ? "CONNECTED" : "OFFLINE";
   $("status").classList.toggle("on", ok); }
 function elapsed(){ return S.elapsedBase + (S.running ? (Date.now()-S.startedAt)/1000 : 0); }
@@ -202,11 +212,12 @@ function render(){
   $("hName").textContent=S.h; $("aName").textContent=S.a;
   $("hSetName").textContent=S.h; $("aSetName").textContent=S.a;
   $("hVal").textContent=S.hs; $("aVal").textContent=S.as;
-  $("hSetsVal").textContent=S.hsets; $("aSetsVal").textContent=S.asets;
+  $("hSetsVal").textContent=fmtSets(S.hsets); $("aSetsVal").textContent=fmtSets(S.asets);
   $("endVal").textContent = S.end>0 ? S.end : "OFF"; $("setVal").textContent=S.setNum;
   $("setRow").style.display = (S.setsMode && !S.tb) ? "" : "none";
   $("tbRow").style.display = S.setsMode ? "" : "none";
   $("setsCells").style.display = S.setsMode ? "" : "none";
+  $("drawnRow").style.display = S.setsMode ? "" : "none";
   $("tbToggle").textContent = S.tb ? "ON" : "OFF";
   $("tbToggle").classList.toggle("on", S.tb);
   $("timervis").textContent = S.showTimer ? "TIMER SHOWN" : "TIMER HIDDEN";
@@ -214,7 +225,7 @@ function render(){
   $("onair").textContent = S.onAir ? "ON AIR" : "OFF AIR";
   $("onair").classList.toggle("off", !S.onAir);
   $("mirror").textContent = S.h+" "+LIVE.hs+" \u2013 "+LIVE.as+" "+S.a +
-      (S.setsMode ? "   (sets "+LIVE.hsets+"\u2013"+LIVE.asets+")" : "");
+      (S.setsMode ? "   (sets "+fmtSets(LIVE.hsets)+"\u2013"+fmtSets(LIVE.asets)+")" : "");
   $("mirror2").textContent = (LIVE.fin ? "F \u00B7 "
       : (S.setsMode ? (LIVE.tb ? "TB" : "SET "+LIVE.setNum)+" \u00B7 " : "")
         + (LIVE.end>0 ? "END "+LIVE.end+" \u00B7 " : "")) + S.info;
@@ -242,7 +253,7 @@ setInterval(tick, 250);
 
 document.querySelectorAll("button[data-k]").forEach(b=>{
   b.addEventListener("click", ()=>{
-    const k=b.dataset.k, d=parseInt(b.dataset.d);
+    const k=b.dataset.k, d=parseFloat(b.dataset.d);
     const min = (k==="setNum") ? 1 : 0;
     S[k]=Math.max(min, S[k]+d);
     render();
@@ -294,6 +305,7 @@ $("update").onclick=()=>{ snapshotLive(); render(); push(); };
 // published, since the display never saw them
 $("revert").onclick=()=>{ STAGED.forEach(k=>S[k]=LIVE[k]); render(); };
 $("finToggle").onclick=()=>{ S.fin=!S.fin; render(); };
+$("drawnSet").onclick=()=>{ S.hsets+=0.5; S.asets+=0.5; render(); };
 $("rzScores").onclick=()=>{ S.hs=0; S.as=0; render(); };
 $("rzEnd").onclick=()=>{ S.end=1; render(); };
 $("timervis").onclick=()=>{ S.showTimer=!S.showTimer; render(); push(); };

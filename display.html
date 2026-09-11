@@ -28,7 +28,7 @@
   .flagcell { flex:0 0 92px; }
   .flagcell img { width:72px; height:48px; outline:2px solid var(--navy); transform:skewX(12deg); }
   .abbr { flex:0 0 auto; min-width:88px; padding:0 6px 0 7px; color:var(--navy); font-size:44px; letter-spacing:1px; }
-  .sets { flex:0 0 42px; background:var(--ice); color:var(--navy); font-size:34px; }
+  .sets { flex:0 0 54px; background:var(--ice); color:var(--navy); font-size:34px; }
   .sets.hidden { display:none; }
   .score { flex:0 0 72px; background:var(--navy); color:var(--white); font-size:48px; }
   .endchip { flex:0 0 84px; background:var(--ice); color:var(--navy); }
@@ -129,7 +129,7 @@ function render(){
   if (prevAs!==null && S.as!==prevAs) pulse($("aScore").parentElement);
   prevHs=S.hs; prevAs=S.as;
   $("hScore").textContent=S.hs; $("aScore").textContent=S.as;
-  $("hSets").textContent=S.hsets; $("aSets").textContent=S.asets;
+  $("hSets").textContent=fmtSets(S.hsets); $("aSets").textContent=fmtSets(S.asets);
   $("hSetsCell").classList.toggle("hidden", !S.setsMode);
   $("aSetsCell").classList.toggle("hidden", !S.setsMode);
   // END 0 hides the end readout (e.g. a one-end tiebreak); a finished game
@@ -162,6 +162,11 @@ function render(){
 }
 // Match both abbreviation cells to the wider of the two. offsetWidth is the
 // untransformed layout width, so the skew and page scale don't affect it.
+// a drawn set is half each: 0.5 -> "1/2", 1.5 -> "1 1/2"
+function fmtSets(n){
+  const w=Math.floor(n), h=(n-w)>=0.5;
+  return (w||!h ? String(w) : "") + (h ? "\u00BD" : "");
+}
 function sizeAbbrs(){
   const cells=[$("hAbbr").parentElement, $("aAbbr").parentElement];
   const BASE=44, MIN=26, MAXW=132;
